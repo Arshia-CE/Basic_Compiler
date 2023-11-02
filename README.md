@@ -20,18 +20,19 @@ IF (a > b) THEN
     PRINT "a is greater than b";
 ELSE
     PRINT "b is greater than or equal to a";
-Multiple Loops
+```
+### Multiple Loops
 For checking multiple conditions, sometimes multiple loops are needed. The language should be able to handle multiple loops, for example, performing numerical computations. Here are some examples of these rules:
 
-Multiple Functions
+### Multiple Functions
 Similar to the example provided above, our language allows the user to define and use functions with different names and parameters.
 
-Rules
-antlr
-Copy code
+### Rules
+```antlr
 [ \t\r\n]+ -> skip;
+```
 
-Implementation and Evaluation:
+### Implementation and Evaluation:
 
 First Phase of the Project
 We design and implement the lexical analyzer. Design and implement the lexical analyzer (Lexical) using Antlr, ensuring the following features:
