@@ -43,4 +43,4 @@ We design and implement the lexical analyzer. Design and implement the lexical a
 Second Phase of the Project
 We design and implement the syntactic analyzer. Design and implement the syntax analyzer (Syntax) using Antlr, ensuring the following features:
 
--Ability to display errors (report the maximum number each time the compiler is executed)
+- Ability to display errors (report the maximum number each time the compiler is executed)
