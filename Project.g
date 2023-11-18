@@ -8,15 +8,61 @@ statements
 	;
 	
 statement
-	: if_st |
+	: if_st | for_st
 	;	
+if_st	:	IF 
+	;
+for_st	:	LOOP
+	;
+	
+	
 	//lexer 
+BOOL 	:	'true' | 'false'
+	;
+
+AND 	:	'&&'
+	;
+
+OR 	:	'||'
+	;
+	
+NOT	:	'!'
+	;
+	
+CMP	: '==' | '!=' |'<'|'>'|'<='|'>='
+	; 
+	
+	
+IF 	:	'if'
+	;
+	
+ELSE 	:	'else'
+	;
+	
+THEN 	:	'then'
+	;
+	
+	
+
+LOOP 	:	'loop'
+	;
+
+END 	:	'end'
+  	;
+
+DO	:	'do'
+	;
+	
+	
 ID  :	('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'0'..'9'|'_')*
     ;
 
 INT :	'0'..'9'+
     ;
 
+VOID	:	'void'
+	;
+	
 FLOAT
     :   ('0'..'9')+ '.' ('0'..'9')* EXPONENT?
     |   '.' ('0'..'9')+ EXPONENT?
