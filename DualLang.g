@@ -10,7 +10,7 @@ statements
     ;
 
 statement:SEND | RECEIVE | BOOL | AND | OR | NOT |CMP | MUL | ADD |IF | ELSE | THEN | LOOP | END | DO | WHILE |FUNCTION
-	| ID|TYPE |STRING| INT | FLOAT  | STRING | COMMENT | WS;
+	| ID |TYPE | INT | FLOAT  | STRING | COMMENT | ERROR | WS ;
 
 
 	
@@ -83,6 +83,7 @@ TYPE 	: 'int'  |'float'| 'char' | 'string' | 'void'
 ID  :	('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'0'..'9'|'_')*
     ;
 
+
 INT :	'0'..'9'+
     ;
 
@@ -103,15 +104,11 @@ COMMENT
     |   '/*' ( options {greedy=false;} : . )* '*/' {$channel=HIDDEN;}
     ;
 
-WS  :   ( ' '
-        | '\t'
-        | '\r'
-        | '\n'
-        ) {$channel=HIDDEN;}
-    ;
+WS    : (' ' | '\t' | '\r' | '\n')+ {$channel=HIDDEN;};
 
-    
-
+ERROR   : . {System.err.println("Lexer error: Unexpected character '" + $text + "'");}
+        ;
+        
 fragment
 EXPONENT : ('e'|'E') ('+'|'-')? ('0'..'9')+ ;
 
