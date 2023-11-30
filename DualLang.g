@@ -1,4 +1,4 @@
-grammar Project;
+grammar DualLang;
 //parser
 
 prog 
@@ -9,11 +9,21 @@ statements
     : statement*
     ;
 
-statement:INT | BOOL | STRING | ID | CMP | AND | OR | NOT | IF | ELSE | SEND | RECEIVE | WS;
+statement:SEND | RECEIVE | BOOL | AND | OR | NOT |CMP | MUL | ADD |IF | ELSE | THEN | LOOP | END | DO | WHILE |FUNCTION
+	| ID|TYPE |STRING| INT | FLOAT  | STRING | COMMENT | WS;
 
 
 	
 //lexer 
+
+SEND
+	: 'send' 
+	;
+RECEIVE 
+	: 'receive' 
+	;
+
+
 BOOL 	:	'true' | 'false'
 	;
 
@@ -29,7 +39,14 @@ NOT	:	'!'
 CMP	: '==' | '!=' |'<'|'>'|'<='|'>='
 	; 
 	
-	
+MUL	: '*' | '/'
+	;
+
+ADD	: '-' | '+'
+	;
+
+
+
 IF 	:	'if'
 	;
 	
@@ -38,6 +55,7 @@ ELSE 	:	'else'
 	
 THEN 	:	'then'
 	;
+	
 	
 	
 
@@ -50,6 +68,17 @@ END 	:	'end'
 DO	:	'do'
 	;
 	
+WHILE	:	'while'
+	;
+	
+	
+FUNCTION :	'func'
+	 ;	
+
+TYPE 	: 'int'  |'float'| 'char' | 'string' | 'void'	
+	;
+	
+	
 	
 ID  :	('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'0'..'9'|'_')*
     ;
@@ -57,13 +86,16 @@ ID  :	('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'0'..'9'|'_')*
 INT :	'0'..'9'+
     ;
 
-VOID	:	'void'
-	;
 	
 FLOAT
     :   ('0'..'9')+ '.' ('0'..'9')* EXPONENT?
     |   '.' ('0'..'9')+ EXPONENT?
     |   ('0'..'9')+ EXPONENT
+    ;
+
+
+STRING
+    :  '"' ( ESC_SEQ | ~('\\'|'"') )* '"'
     ;
 
 COMMENT
@@ -78,16 +110,7 @@ WS  :   ( ' '
         ) {$channel=HIDDEN;}
     ;
 
-STRING
-    :  '"' ( ESC_SEQ | ~('\\'|'"') )* '"'
-    ;
     
-SEND
-	: 'send' 
-	;
-RECEIVE 
-	: 'receive' 
-	;
 
 fragment
 EXPONENT : ('e'|'E') ('+'|'-')? ('0'..'9')+ ;
