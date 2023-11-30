@@ -1,22 +1,19 @@
 grammar Project;
 //parser
-start	
-	: statements EOF	 
-	;
+
+prog 
+    : statements EOF
+    ;
+
 statements
-	:statement*	
-	;
+    : statement*
+    ;
+
+statement:INT | BOOL | STRING | ID | CMP | AND | OR | NOT | IF | ELSE | SEND | RECEIVE | WS;
+
+
 	
-statement
-	: if_st | for_st
-	;	
-if_st	:	IF 
-	;
-for_st	:	LOOP
-	;
-	
-	
-	//lexer 
+//lexer 
 BOOL 	:	'true' | 'false'
 	;
 
@@ -84,6 +81,13 @@ WS  :   ( ' '
 STRING
     :  '"' ( ESC_SEQ | ~('\\'|'"') )* '"'
     ;
+    
+SEND
+	: 'send' 
+	;
+RECEIVE 
+	: 'receive' 
+	;
 
 fragment
 EXPONENT : ('e'|'E') ('+'|'-')? ('0'..'9')+ ;
