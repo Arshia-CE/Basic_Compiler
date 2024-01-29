@@ -1,4 +1,5 @@
 grammar DualLang;
+
 //parser
 
 prog 
@@ -10,65 +11,40 @@ statements
     ;
 
 statement
-	: 'device1:' device1Statements
-	| 'device2:' device2Statements;
+	: 'device1:' device1Statements*
+	| 'device2:' device2Statements*
+	;
+
 
 device1Statements
-	: calculation
+	: expr
 	| interaction1
-	| ifStatement
-	| functionDefinition
-	| functionCall
-	| printStatement
-	| loop
 	;
 	
 device2Statements
-	: calculation
+	: expr
 	| interaction2
-	| ifStatement
-	| functionDefinition
-	| functionCall
-	| printStatement
-	| loop
 	;	
 	
+expr options {backtrack=true;}	
+	: calculation
+	| ifStatement
+	| loop
+	| printStatement
+	| functionDefinition
+	| functionCall
+	;
+
+
+availableExpr options {backtrack=true;}	
+	: device1Statements*
+	| device2Statements*
+	;
+
 	
 calculation
-	: 'calculate' ID '=' mathExpr ';'
+	: 'calculate' ID '=' (mathExpr | functionCall)';'
 	;
-	
-
-mathExpr	
-	: mathStatement
-	| boolStatement	
-	;
-	
-mathStatement					//left recursion
-	: mathStatement '+' mathStatement
-	| mathStatement '-' mathStatement
-	| mathStatement '*' mathStatement
-	| mathStatement '/' mathStatement
-	| mathStatement '^' mathStatement
-	| mathStatement '%' mathStatement
-	| '(' mathStatement ')'
-	| ID
-	| INT
-	| FLOAT
-	;
-
-boolStatement					//left recursion
-	: boolStatement AND boolStatement
-	| boolStatement OR boolStatement 
-	| NOT boolStatement
-	| INT 
-	| boolStatement CMP boolStatement 
-	| '(' boolStatement ')' 
-	| ID
-	;
-
-
-
 	
 
 interaction2	
@@ -80,18 +56,33 @@ interaction1
 	;
 	
 	
+mathExpr options {backtrack=true;}	
+	: mathStatement
+	| boolStatement	
+	;
+	
+mathStatement options {backtrack=true;}
+	: ('(' mathStatement ')' | ID | INT | FLOAT )			
+	 (ADD mathStatement | MUL mathStatement | '^' mathStatement | '%' mathStatement)*
+	;
+
+
+boolStatement					
+	: (NOT boolStatement | INT | '(' boolStatement ')' | ID) (AND boolStatement | OR boolStatement | CMP boolStatement)*
+	;
+
+
+	
 	
 ifStatement
-	: IF '(' ifCondition')' THEN statements (ELSE statements)?	////customize if body
+	: IF '(' boolStatement')' THEN availableExpr (ELSE availableExpr)? END////customize if body
 	;
 	
 printStatement
-	: 'PRINT' STRING ';'	
+	: 'PRINT' (STRING | mathExpr)';'	
 	;
 	
-ifCondition
-	: boolStatement CMP boolStatement 	
-	;
+
 
 
 loop : LOOP loopCondition DO loopBody END;
@@ -103,7 +94,7 @@ loopCondition
 
 
 whileCondition
-	: ('(' whileCondition')' | NOT whileCondition | INT | ID) (AND whileCondition | OR whileCondition)* 
+	: ('(' whileCondition')' | NOT whileCondition | INT | ID) (CMP whileCondition)* 
 	;
 	
 forCondition
@@ -123,7 +114,7 @@ loopUpdate
 	;					//enhance
 
 loopBody 							//customize loop body
-	: statements 
+	: availableExpr 
 	| 'BREAK' 
 	;
 
@@ -132,7 +123,7 @@ loopBody 							//customize loop body
 
 
 functionDefinition	
-	: FUNCTION ID '(' parameterList? ')' 'returns' TYPE '{' statements '}'
+	: FUNCTION ID '(' parameterList? ')' 'returns' TYPE '{' availableExpr 'return' mathExpr';' '}'
 	;	
 	
 parameterList
@@ -140,11 +131,11 @@ parameterList
 	;	
 
 functionCall	
-	: ID '(' exprList? ')' ';'
+	: ID '(' exprList? ')'
 	;
 
 exprList
-	: funcExpr (',' funcExpr)*;	
+	: funcExpr (',' funcExpr)*
 	;
 
 funcExpr
