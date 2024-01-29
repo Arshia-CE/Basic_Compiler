@@ -9,16 +9,155 @@ statements
     : statement*
     ;
 
-statement:SEND | RECEIVE | BOOL | AND | OR | NOT |CMP | MUL | ADD |IF | ELSE | THEN | LOOP | END | DO | WHILE |FUNCTION
-	| ID |TYPE | INT | FLOAT  | STRING | COMMENT | ERROR | WS ;
+statement
+	: 'device1:' device1Statements
+	| 'device2:' device2Statements;
+
+device1Statements
+	: calculation
+	| interaction1
+	| ifStatement
+	| functionDefinition
+	| functionCall
+	| printStatement
+	| loop
+	;
+	
+device2Statements
+	: calculation
+	| interaction2
+	| ifStatement
+	| functionDefinition
+	| functionCall
+	| printStatement
+	| loop
+	;	
+	
+	
+calculation
+	: 'calculate' ID '=' mathExpr ';'
+	;
+	
+
+mathExpr	
+	: mathStatement
+	| boolStatement	
+	;
+	
+mathStatement					//left recursion
+	: mathStatement '+' mathStatement
+	| mathStatement '-' mathStatement
+	| mathStatement '*' mathStatement
+	| mathStatement '/' mathStatement
+	| mathStatement '^' mathStatement
+	| mathStatement '%' mathStatement
+	| '(' mathStatement ')'
+	| ID
+	| INT
+	| FLOAT
+	;
+
+boolStatement					//left recursion
+	: boolStatement AND boolStatement
+	| boolStatement OR boolStatement 
+	| NOT boolStatement
+	| INT 
+	| boolStatement CMP boolStatement 
+	| '(' boolStatement ')' 
+	| ID
+	;
+
 
 
 	
+
+interaction2	
+	: 'receive from device1(' mathExpr ')' ';'	//check this
+	;
+
+interaction1
+	: 'send to device2(' mathExpr ')' ';'		//check this 
+	;
+	
+	
+	
+ifStatement
+	: IF '(' ifCondition')' THEN statements (ELSE statements)?	////customize if body
+	;
+	
+printStatement
+	: 'PRINT' STRING ';'	
+	;
+	
+ifCondition
+	: boolStatement CMP boolStatement 	
+	;
+
+
+loop : LOOP loopCondition DO loopBody END;
+
+loopCondition
+	: whileCondition
+	| forCondition
+	; 
+
+
+whileCondition
+	: ('(' whileCondition')' | NOT whileCondition | INT | ID) (AND whileCondition | OR whileCondition)* 
+	;
+	
+forCondition
+	:  loopInitialization ',' forEndCondition ',' loopUpdate
+	;
+
+loopInitialization 
+	:(TYPE)? ID '=' INT
+	;
+
+forEndCondition 
+	: boolStatement CMP boolStatement 
+	;
+
+loopUpdate 
+	: ID '++' | ID '--'
+	;					//enhance
+
+loopBody 							//customize loop body
+	: statements 
+	| 'BREAK' 
+	;
+
+
+
+
+
+functionDefinition	
+	: FUNCTION ID '(' parameterList? ')' 'returns' TYPE '{' statements '}'
+	;	
+	
+parameterList
+	: (TYPE ID)(',' TYPE ID)*
+	;	
+
+functionCall	
+	: ID '(' exprList? ')' ';'
+	;
+
+exprList
+	: funcExpr (',' funcExpr)*;	
+	;
+
+funcExpr
+	: ID
+	| STRING
+	| functionCall
+	| mathExpr	
+	;
+
+
+
 //lexer 
 
-SEND
-	: 'send' 
-	;
 RECEIVE 
 	: 'receive' 
 	;
