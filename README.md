@@ -36,9 +36,7 @@ Similar to the example provided above, our language allows the user to define an
 
 First Phase of the Project
 We design and implement the lexical analyzer. Design and implement the lexical analyzer (Lexical) using Antlr, ensuring the following features:
-
 - Ability to display errors (report the maximum number each time the compiler is executed)
-- Create an interface for a better user experience for the analyzer.
 
 Second Phase of the Project
 We design and implement the syntactic analyzer. Design and implement the syntax analyzer (Syntax) using Antlr, ensuring the following features:
