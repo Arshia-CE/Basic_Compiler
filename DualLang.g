@@ -48,11 +48,11 @@ calculation
 	
 
 interaction2	
-	: 'receive from device1(' mathExpr ')' ';'	//check this
+	: 'receive from device1(' mathExpr ')' ';'	
 	;
 
 interaction1
-	: 'send to device2(' mathExpr ')' ';'		//check this 
+	: 'send to device2(' mathExpr ')' ';'		
 	;
 	
 	
@@ -75,11 +75,11 @@ boolStatement
 	
 	
 ifStatement
-	: IF '(' boolStatement')' THEN availableExpr (ELSE availableExpr)? END////customize if body
+	: IF '(' boolStatement')' THEN availableExpr (ELSE availableExpr)? END
 	;
 	
 printStatement
-	: 'PRINT' (STRING | mathExpr)';'	
+	: 'PRINT' (STRING | mathExpr | functionCall)';'	
 	;
 	
 
@@ -106,14 +106,14 @@ loopInitialization
 	;
 
 forEndCondition 
-	: boolStatement CMP boolStatement 
+	: boolStatement 
 	;
 
 loopUpdate 
-	: ID '++' | ID '--'
-	;					//enhance
+	: ID '++' | ID '--' | mathStatement
+	;					
 
-loopBody 							//customize loop body
+loopBody 							
 	: availableExpr 
 	| 'BREAK' 
 	;
@@ -123,7 +123,7 @@ loopBody 							//customize loop body
 
 
 functionDefinition	
-	: FUNCTION ID '(' parameterList? ')' 'returns' TYPE '{' availableExpr 'return' mathExpr';' '}'
+	: FUNCTION ID '(' parameterList? ')' 'returns' TYPE '{' availableExpr ('return' mathExpr';')? '}'
 	;	
 	
 parameterList

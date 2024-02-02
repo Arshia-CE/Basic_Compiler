@@ -44,3 +44,32 @@ Second Phase of the Project
 We design and implement the syntactic analyzer. Design and implement the syntax analyzer (Syntax) using Antlr, ensuring the following features:
 
 - Ability to display errors (report the maximum number each time the compiler is executed)
+
+### Test code:
+device1:
+    calculate a = 5;
+    if (a > 0) then
+        send to device2(a + 3);
+    end
+
+device2:
+    loop result != 0 do
+        receive from device1(result);
+        PRINT result;
+    end
+
+device1:
+    calculate a = 5;
+
+    func addThree(int x) returns int {
+        return x + 3;
+    }
+    calculate b = addThree(a);
+    send to device2(b/3);
+
+device2:
+    loop result != 0 do
+        receive from device1(result);
+        PRINT result;
+    end
+
